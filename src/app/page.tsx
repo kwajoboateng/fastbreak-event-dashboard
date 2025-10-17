@@ -3,6 +3,28 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Calendar, Users, MapPin, Search } from 'lucide-react'
 
+/**
+ * Landing page component - the public homepage of the application.
+ * 
+ * This is a server component that displays:
+ * - Application branding and value proposition
+ * - Feature highlights with icons and descriptions
+ * - Call-to-action buttons for authentication
+ * - Responsive design with gradient background
+ * 
+ * Features:
+ * - Hero section with app name and description
+ * - Feature cards highlighting key capabilities
+ * - Responsive grid layout for feature cards
+ * - Call-to-action section with sign-in and get-started buttons
+ * - Custom color scheme with neutral tones
+ * 
+ * Navigation:
+ * - Sign In button: Links to /login
+ * - Get Started button: Links to /login?mode=signup (signup mode)
+ * 
+ * @returns JSX element with the complete landing page
+ */
 export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#E6E6E6] to-[#BAC8B1]">

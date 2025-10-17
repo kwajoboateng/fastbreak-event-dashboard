@@ -11,6 +11,7 @@ A full-stack sports event management application built with Next.js, Supabase, a
 - **Responsive Design**: Netflix-style grid layout that works on all devices
 - **Real-time UI**: Toast notifications and loading states
 - **Protected Routes**: All routes require authentication
+- **Comprehensive Documentation**: Thoroughly commented codebase for easy maintenance
 
 ## Tech Stack
 
@@ -44,7 +45,6 @@ npm install
 ```env
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_url_here
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key_here
-SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key_here
 ```
 
 ### 3. Set up Database
@@ -125,7 +125,9 @@ src/
 │   ├── actions/           # Server Actions
 │   │   ├── auth.ts       # Authentication actions
 │   │   └── events.ts     # Event CRUD actions
-│   ├── auth/             # OAuth callback
+│   ├── auth/             # OAuth callback and error handling
+│   │   ├── auth-code-error/  # OAuth error page
+│   │   └── callback/     # OAuth callback route
 │   ├── dashboard/        # Dashboard pages
 │   ├── events/           # Event pages
 │   │   ├── [id]/        # Event details and edit
@@ -134,12 +136,23 @@ src/
 │   └── layout.tsx        # Root layout
 ├── components/
 │   ├── dashboard/        # Dashboard components
+│   │   ├── EventCard.tsx
+│   │   ├── EventsGrid.tsx
+│   │   └── SearchAndFilter.tsx
 │   └── ui/              # Shadcn UI components
+│       ├── badge.tsx
+│       ├── button.tsx
+│       ├── card.tsx
+│       ├── input.tsx
+│       ├── label.tsx
+│       ├── select.tsx
+│       └── textarea.tsx
 ├── lib/
 │   ├── supabase/        # Supabase configuration
 │   ├── validations/     # Zod schemas
 │   ├── action-response.ts
-│   └── error-handler.ts
+│   ├── error-handler.ts
+│   └── utils.ts
 └── types/
     └── database.ts      # TypeScript types
 ```
@@ -156,6 +169,7 @@ src/
 - Middleware protects all routes except login and OAuth callback
 - Automatic redirect to login for unauthenticated users
 - Google OAuth and email/password authentication
+- Comprehensive OAuth error handling with user-friendly error pages
 
 ### Event Management
 - Create events with multiple venues
@@ -165,9 +179,11 @@ src/
 
 ### UI/UX
 - Shadcn UI components throughout
+- Custom neutral color scheme (#7B9669, #6C8480, #E6E6E6, #BAC8B1, #404E3B)
 - Toast notifications for success/error states
 - Loading states and error handling
 - Mobile-responsive design
+- Consistent cursor styling for interactive elements
 
 ## Deployment
 
@@ -183,7 +199,6 @@ src/
 ```env
 NEXT_PUBLIC_SUPABASE_URL=your_production_supabase_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_production_anon_key
-SUPABASE_SERVICE_ROLE_KEY=your_production_service_role_key
 ```
 
 Don't forget to update your Supabase OAuth redirect URLs for production!

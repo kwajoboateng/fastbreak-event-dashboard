@@ -7,10 +7,27 @@ import { Calendar, MapPin } from 'lucide-react'
 import Link from 'next/link'
 import { format } from 'date-fns'
 
+/**
+ * Props for the EventCard component
+ */
 interface EventCardProps {
   event: EventWithVenues
 }
 
+/**
+ * EventCard component displays a preview of an event in the dashboard grid.
+ * 
+ * Features:
+ * - Clickable card that navigates to event details
+ * - Hover effects with scaling and color transitions
+ * - Displays event name, date/time, sport type, and venues
+ * - Shows up to 2 venues with overflow count
+ * - Optional description display
+ * - Responsive design with proper text truncation
+ * 
+ * @param event - The event data including associated venues
+ * @returns JSX element representing the event card
+ */
 export function EventCard({ event }: EventCardProps) {
   const eventDate = new Date(event.date)
   const formattedDate = format(eventDate, 'MMM dd, yyyy')

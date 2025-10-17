@@ -7,6 +7,15 @@ import { CreateEventInput, UpdateEventInput } from '@/lib/validations/event'
 import { EventWithVenues } from '@/types/database'
 import { redirect } from 'next/navigation'
 
+/**
+ * Server Action to retrieve all events with their associated venues.
+ * 
+ * This function fetches all events from the database and includes
+ * their associated venues in a single query using Supabase's
+ * relational query capabilities.
+ * 
+ * @returns Promise<ActionResponse<EventWithVenues[]>> - All events with venues
+ */
 export async function getEvents(): Promise<ActionResponse<EventWithVenues[]>> {
   try {
     const supabase = await createClient()
@@ -29,6 +38,12 @@ export async function getEvents(): Promise<ActionResponse<EventWithVenues[]>> {
   }
 }
 
+/**
+ * Server Action to retrieve a specific event by ID with its venues.
+ * 
+ * @param id - The UUID of the event to retrieve
+ * @returns Promise<ActionResponse<EventWithVenues | null>> - The event with venues or null if not found
+ */
 export async function getEventById(id: string): Promise<ActionResponse<EventWithVenues | null>> {
   try {
     const supabase = await createClient()
@@ -52,6 +67,18 @@ export async function getEventById(id: string): Promise<ActionResponse<EventWith
   }
 }
 
+/**
+ * Server Action to search and filter events by name and sport type.
+ * 
+ * This function supports:
+ * - Text search on event names (case-insensitive, partial matching)
+ * - Filtering by sport type (exact match)
+ * - Both filters can be used together
+ * 
+ * @param searchTerm - Optional search term to match against event names
+ * @param sportType - Optional sport type to filter by
+ * @returns Promise<ActionResponse<EventWithVenues[]>> - Filtered events with venues
+ */
 export async function searchAndFilterEvents(
   searchTerm?: string,
   sportType?: string
@@ -86,6 +113,19 @@ export async function searchAndFilterEvents(
   }
 }
 
+/**
+ * Server Action to create a new event with associated venues.
+ * 
+ * This function performs a two-step operation:
+ * 1. Creates the event record with the current user as creator
+ * 2. Creates all associated venue records
+ * 
+ * The operation is atomic - if venue creation fails, the event
+ * creation is also rolled back.
+ * 
+ * @param data - Validated event data including venues
+ * @returns Promise<ActionResponse<EventWithVenues>> - The created event with venues
+ */
 export async function createEvent(data: CreateEventInput): Promise<ActionResponse<EventWithVenues>> {
   try {
     const supabase = await createClient()
@@ -139,6 +179,21 @@ export async function createEvent(data: CreateEventInput): Promise<ActionRespons
   }
 }
 
+/**
+ * Server Action to update an existing event and its venues.
+ * 
+ * This function performs a three-step operation:
+ * 1. Updates the event record with new data
+ * 2. If venues are provided, deletes all existing venues for the event
+ * 3. If venues are provided, creates new venue records
+ * 
+ * Note: Venue updates are handled by complete replacement (delete + insert)
+ * rather than individual updates for simplicity and consistency.
+ * 
+ * @param id - The UUID of the event to update
+ * @param data - Validated event data (all fields optional except id)
+ * @returns Promise<ActionResponse<EventWithVenues>> - The updated event with venues
+ */
 export async function updateEvent(id: string, data: UpdateEventInput): Promise<ActionResponse<EventWithVenues>> {
   try {
     const supabase = await createClient()
@@ -197,6 +252,15 @@ export async function updateEvent(id: string, data: UpdateEventInput): Promise<A
   }
 }
 
+/**
+ * Server Action to delete an event and all its associated venues.
+ * 
+ * This function deletes the event record, which will cascade delete
+ * all associated venue records due to foreign key constraints.
+ * 
+ * @param id - The UUID of the event to delete
+ * @returns Promise<ActionResponse<null>> - Success response
+ */
 export async function deleteEvent(id: string): Promise<ActionResponse<null>> {
   try {
     const supabase = await createClient()
@@ -216,6 +280,15 @@ export async function deleteEvent(id: string): Promise<ActionResponse<null>> {
   }
 }
 
+/**
+ * Server Action wrapper for deleting an event with automatic redirect.
+ * 
+ * This function is designed to be used directly in forms as a form action.
+ * It calls the deleteEvent function and redirects to the dashboard on success.
+ * 
+ * @param id - The UUID of the event to delete
+ * @returns Promise<void> - Always redirects to dashboard
+ */
 export async function deleteEventAction(id: string): Promise<void> {
   const result = await deleteEvent(id)
   if (!result.success) {

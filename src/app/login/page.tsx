@@ -8,11 +8,15 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { signInWithEmail, signInWithGoogle, signUpWithEmail } from '@/app/actions/auth'
+import { signInWithEmail, signUpWithEmail } from '@/app/actions/auth'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { toast } from 'sonner'
 import { createClient } from '@/lib/supabase/client'
 
+/**
+ * Validation schema for login/signup form using Zod.
+ * Ensures email is valid and password meets minimum requirements.
+ */
 const loginSchema = z.object({
   email: z.string().email('Invalid email address'),
   password: z.string().min(6, 'Password must be at least 6 characters'),
@@ -20,6 +24,27 @@ const loginSchema = z.object({
 
 type LoginForm = z.infer<typeof loginSchema>
 
+/**
+ * Login/Signup page component with dual functionality.
+ * 
+ * This component handles both user authentication and registration:
+ * - Toggle between login and signup modes
+ * - Email/password authentication
+ * - Google OAuth authentication
+ * - Form validation with React Hook Form and Zod
+ * - URL parameter support for initial signup mode
+ * - Loading states and error handling
+ * - Automatic redirect after successful authentication
+ * 
+ * Features:
+ * - Responsive design with Shadcn UI components
+ * - Real-time form validation
+ * - Toast notifications for user feedback
+ * - OAuth redirect handling
+ * - Query parameter support (?mode=signup)
+ * 
+ * @returns JSX element with the authentication form
+ */
 export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [isSignUp, setIsSignUp] = useState(false)

@@ -9,11 +9,34 @@ import { searchAndFilterEvents } from '@/app/actions/events'
 import { EventWithVenues } from '@/types/database'
 import { toast } from 'sonner'
 
+/**
+ * Props for the SearchAndFilter component
+ */
 interface SearchAndFilterProps {
   onEventsChange: (events: EventWithVenues[]) => void
   initialEvents: EventWithVenues[]
 }
 
+/**
+ * SearchAndFilter component provides search and filtering functionality for events.
+ * 
+ * Features:
+ * - Real-time search with debouncing (300ms delay)
+ * - Sport type filtering with dropdown
+ * - Clear filters functionality
+ * - Optimized re-rendering using useRef to prevent unnecessary updates
+ * - Loading states during search operations
+ * - Error handling with toast notifications
+ * 
+ * Performance optimizations:
+ * - Uses useRef to store stable references to props
+ * - Debounced search to avoid excessive API calls
+ * - useCallback for stable function references
+ * 
+ * @param onEventsChange - Callback function to update parent with filtered events
+ * @param initialEvents - The original unfiltered list of events
+ * @returns JSX element with search input, filter dropdown, and clear button
+ */
 export function SearchAndFilter({ onEventsChange, initialEvents }: SearchAndFilterProps) {
   const [searchTerm, setSearchTerm] = useState('')
   const [sportType, setSportType] = useState('all')

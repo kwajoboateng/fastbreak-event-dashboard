@@ -7,6 +7,28 @@ import { EventWithVenues } from '@/types/database'
 import { getEvents } from '@/app/actions/events'
 import { toast } from 'sonner'
 
+/**
+ * Dashboard page component - the main view for managing sports events.
+ * 
+ * This is a client component that handles:
+ * - Loading and displaying all events
+ * - Search and filtering functionality
+ * - State management for events and loading states
+ * - Error handling with toast notifications
+ * 
+ * Key features:
+ * - Responsive grid layout for event cards
+ * - Real-time search and filtering
+ * - Loading states with spinner
+ * - Separation of filtered events from original events for proper reset functionality
+ * 
+ * State management:
+ * - events: Currently displayed events (may be filtered)
+ * - originalEvents: Unfiltered events (used for resetting filters)
+ * - isLoading: Loading state for initial data fetch
+ * 
+ * @returns JSX element with the complete dashboard interface
+ */
 export default function DashboardPage() {
   const [events, setEvents] = useState<EventWithVenues[]>([])
   const [originalEvents, setOriginalEvents] = useState<EventWithVenues[]>([])
