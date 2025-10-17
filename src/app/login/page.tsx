@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -45,7 +45,16 @@ type LoginForm = z.infer<typeof loginSchema>
  * 
  * @returns JSX element with the authentication form
  */
-export default function LoginPage() {
+
+/**
+ * Content component that uses useSearchParams().
+ * 
+ * This component is separated from the main export to allow wrapping
+ * with Suspense boundary, which is required by Next.js for static
+ * generation when using useSearchParams(). This allows the page to
+ * read URL query parameters (like ?mode=signup) during static generation.
+ */
+function LoginPageContent() {
   const [isLoading, setIsLoading] = useState(false)
   const [isSignUp, setIsSignUp] = useState(false)
   const router = useRouter()
@@ -110,6 +119,7 @@ export default function LoginPage() {
       }
       // If successful, the user will be redirected to Google
     } catch (error) {
+      console.error('Google sign in error:', error)
       toast.error('An unexpected error occurred')
       setIsLoading(false)
     }
@@ -199,5 +209,31 @@ export default function LoginPage() {
         </CardContent>
       </Card>
     </div>
+  )
+}
+
+/**
+ * Main page component with Suspense boundary.
+ * 
+ * This wrapper is necessary because useSearchParams() requires a Suspense
+ * boundary when used in pages that are statically generated. The fallback
+ * provides a loading state while the search parameters are being resolved.
+ * This enables the page to read URL query parameters (like ?mode=signup)
+ * during the static generation process.
+ * 
+ * @returns JSX element with Suspense-wrapped content
+ */
+export default function LoginPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-[#E6E6E6] py-12 px-4 sm:px-6 lg:px-8">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#7B9669] mx-auto"></div>
+          <p className="mt-2 text-[#6C8480]">Loading...</p>
+        </div>
+      </div>
+    }>
+      <LoginPageContent />
+    </Suspense>
   )
 }

@@ -5,9 +5,16 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { AlertCircle, ArrowLeft, Copy } from 'lucide-react'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
-import { useState } from 'react'
+import { useState, Suspense } from 'react'
 
-export default function AuthCodeErrorPage() {
+/**
+ * Content component that uses useSearchParams().
+ * 
+ * This component is separated from the main export to allow wrapping
+ * with Suspense boundary, which is required by Next.js for static
+ * generation when using useSearchParams().
+ */
+function AuthCodeErrorContent() {
   const searchParams = useSearchParams()
   const error = searchParams.get('error')
   const description = searchParams.get('description')
@@ -65,7 +72,7 @@ export default function AuthCodeErrorPage() {
               <li>• The session expired</li>
               <li>• There was a network error</li>
               <li>• The OAuth provider configuration is incorrect</li>
-              <li>• The redirect URL doesn't match the configured URL</li>
+              <li>• The redirect URL doesn&apos;t match the configured URL</li>
             </ul>
           </div>
           
@@ -86,5 +93,29 @@ export default function AuthCodeErrorPage() {
         </CardContent>
       </Card>
     </div>
+  )
+}
+
+/**
+ * Main page component with Suspense boundary.
+ * 
+ * This wrapper is necessary because useSearchParams() requires a Suspense
+ * boundary when used in pages that are statically generated. The fallback
+ * provides a loading state while the search parameters are being resolved.
+ * 
+ * @returns JSX element with Suspense-wrapped content
+ */
+export default function AuthCodeErrorPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-2 text-gray-600">Loading...</p>
+        </div>
+      </div>
+    }>
+      <AuthCodeErrorContent />
+    </Suspense>
   )
 }
