@@ -1,4 +1,4 @@
-# Sports Event Management Dashboard
+# GameSync
 
 A full-stack sports event management application built with Next.js, Supabase, and Shadcn UI. Users can create, view, and manage sports events with venue information.
 
