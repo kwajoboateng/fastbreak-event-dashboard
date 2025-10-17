@@ -15,7 +15,7 @@ A full-stack sports event management application built with Next.js, Supabase, a
 
 ## Tech Stack
 
-- **Frontend**: Next.js 14 (App Router), TypeScript, Tailwind CSS
+- **Frontend**: Next.js 15 (App Router), TypeScript, Tailwind CSS
 - **UI Components**: Shadcn UI
 - **Backend**: Supabase (PostgreSQL + Auth)
 - **Deployment**: Vercel
